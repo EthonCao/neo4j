@@ -7,15 +7,16 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import com.cao.types.NodeLabels;
 import com.cao.types.Relationships;
-import com.cao.util.ParseUtil;
 
 import java.io.*;
 import java.net.URL;
 
 public class CreateDB {
-    public static void main(String[] args) throws IOException {
+	
+    public static void create(String databasePath) throws IOException {
+    	
         GraphDatabaseFactory dbFactory = new GraphDatabaseFactory();
-        GraphDatabaseService db = dbFactory.newEmbeddedDatabase(new File(ParseUtil.getNeo4jPath()));
+        GraphDatabaseService db = dbFactory.newEmbeddedDatabase(new File(databasePath));
         try {
         	Transaction tx = db.beginTx();
             URL url = CreateDB.class.getClassLoader().getResource("Alarm_graph.txt");
@@ -41,9 +42,7 @@ public class CreateDB {
                 }
                 System.out.println(i++);
             }
-
             bf.close();
-
             System.out.println(file.exists());
             tx.success();
         } catch (Exception e) {

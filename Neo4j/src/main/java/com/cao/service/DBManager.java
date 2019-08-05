@@ -3,8 +3,6 @@ package com.cao.service;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-import com.cao.util.ParseUtil;
-
 import java.io.File;
 
 public class DBManager {
@@ -24,11 +22,11 @@ public class DBManager {
      *
      * @return
      */
-    public static GraphDatabaseService getDB() {
+    public static GraphDatabaseService getDB(String databasePath) {
         if (db == null) {
             synchronized (DBManager.class) {
                 GraphDatabaseFactory dbFactory = new GraphDatabaseFactory();
-                db = dbFactory.newEmbeddedDatabase(new File(ParseUtil.getNeo4jPath()));
+                db = dbFactory.newEmbeddedDatabase(new File(databasePath));
                 registerShutDownHook(db);
             }
         }

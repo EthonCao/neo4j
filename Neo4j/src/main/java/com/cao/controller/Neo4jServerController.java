@@ -11,11 +11,13 @@ import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cao.entity.Code;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
@@ -39,7 +41,7 @@ public class Neo4jServerController {
 		driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
 	}
 	
-    @RequestMapping(value = "add", method=RequestMethod.POST)
+    @RequestMapping(value = "/add", method=RequestMethod.POST)
 	public void add(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
 		try{			
 	        Session session = driver.session();
@@ -53,7 +55,7 @@ public class Neo4jServerController {
 		
 	}
     
-    @RequestMapping(value = "query", method=RequestMethod.GET)
+    @RequestMapping(value = "/query", method=RequestMethod.GET)
 	public JSONObject query(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject object = new JSONObject();
 		try{			
@@ -86,8 +88,18 @@ public class Neo4jServerController {
 		return object;
     }
     
-    @RequestMapping(value = "delete", method=RequestMethod.DELETE)
-	public void detele(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value="/queryById", method=RequestMethod.GET)
+    public void queryById(@RequestParam("id") String id) {
+    	Session session = driver.session();
+    	StatementResult statementResult = session.run("MATCH(n) where id(n)=" + id + " RETURN n");
+    	while (statementResult.hasNext()) {
+    		Record record = statementResult.next();
+			System.out.println(record.toString());
+		}
+    }
+    
+    @RequestMapping(value = "/deteleByName", method=RequestMethod.DELETE)
+	public void deteleByName(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
 		try{			
 	        Session session = driver.session();
 	        StatementResult SpecifiedNodes = session.run( "MATCH (a:CaoTest) WHERE a.name = {name} " +
@@ -103,4 +115,53 @@ public class Neo4jServerController {
 			e.printStackTrace();
 		}
     }
+    
+    @RequestMapping(value = "deleteById")
+	public void deleteById(HttpServletRequest request, HttpServletResponse response, @RequestBody Code code) {
+		try{			
+	        Session session = driver.session();
+	        session.run( "match (n) where ID(n) = " + code.getId() +" detach delete n");
+	        session.close();
+	        driver.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+    
+    @RequestMapping(value = "/relate", method=RequestMethod.POST)
+	public void relate(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Code code) {
+		try{
+	        Session session = driver.session();
+	        session.run("MATCH (a:" + code.getNodeFromLabel() + "), (b:" + code.getNodeToLabel() + ") " +
+	        		"WHERE ID(a) = " + code.getNodeFromId() + " AND ID(b) = " + code.getNodeToId()
+	        		+ " CREATE (a)-[:" + code.getRelation() + "]->(b)");
+	        session.close();
+	        driver.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+    
+    @RequestMapping(value = "update")
+	public void update(HttpServletRequest request, HttpServletResponse response, @RequestBody Code code) {
+		try{	
+	        Session session = driver.session();
+	        
+	        StatementResult result = session.run("MATCH (a:" + code.getLabel() + ") WHERE a." + code.getWhere() + " SET a." + code.getUpdate() + " return COUNT(a)");
+	        
+	        while (result.hasNext())
+	        {
+	            Record record = result.next();
+	            System.out.println(record.fields().get(0).value().toString());
+	        }
+	        
+	        session.close();
+	        driver.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+ 
 }
