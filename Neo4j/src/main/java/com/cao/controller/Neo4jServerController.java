@@ -29,7 +29,7 @@ import io.swagger.annotations.Api;
  */
 @Api(tags = "Neo4j访问方式: 通过REST的独立服务器")
 @Controller("neo4jServerController")
-@RequestMapping("/neo")
+@RequestMapping("/neoServer")
 @Scope("prototype")
 public class Neo4jServerController {
 	
