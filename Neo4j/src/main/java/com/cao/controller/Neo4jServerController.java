@@ -33,10 +33,15 @@ import io.swagger.annotations.Api;
 @Scope("prototype")
 public class Neo4jServerController {
 	
+	static Driver driver = null;
+	
+	static {
+		driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
+	}
+	
     @RequestMapping(value = "add", method=RequestMethod.POST)
 	public void add(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
 		try{			
-			Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
 	        Session session = driver.session();
 	        session.run( "CREATE (三路漫:CaoTest{name: {name}, title: {title}, age:{age}, sex:{sex}})",
 	                parameters( "name", name, "title", "皇帝", "age", "100", "sex","神仙" ) );
@@ -52,7 +57,6 @@ public class Neo4jServerController {
 	public JSONObject query(HttpServletRequest request, HttpServletResponse response) {
     	JSONObject object = new JSONObject();
 		try{			
-			Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
 	        Session session = driver.session();
 	        session.run( "CREATE (三路漫:CaoTest{name: {name}, title: {title}, age:{age}, sex:{sex}})",
 	                parameters( "name", "三路漫", "title", "皇帝", "age", "100", "sex","神仙" ) );
@@ -85,7 +89,6 @@ public class Neo4jServerController {
     @RequestMapping(value = "delete", method=RequestMethod.DELETE)
 	public void detele(@RequestParam("name") String name, HttpServletRequest request, HttpServletResponse response) {
 		try{			
-			Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
 	        Session session = driver.session();
 	        StatementResult SpecifiedNodes = session.run( "MATCH (a:CaoTest) WHERE a.name = {name} " +
                     " Delete a ",
