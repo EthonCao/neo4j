@@ -40,8 +40,6 @@ public class Neo4jServerController {
 	        Session session = driver.session();
 	        session.run( "CREATE (三路漫:CaoTest{name: {name}, title: {title}, age:{age}, sex:{sex}})",
 	                parameters( "name", name, "title", "皇帝", "age", "100", "sex","神仙" ) );
-	        session.run( "CREATE (巫师:CaoTest{name: {name}, title: {title}, age:{age}, sex:{sex}})",
-	                parameters( "name", name, "title", "捉妖记", "age", "1010", "sex","牛鬼蛇神" ) );
 	        session.close();
 	        driver.close();
 		}catch(Exception e){
