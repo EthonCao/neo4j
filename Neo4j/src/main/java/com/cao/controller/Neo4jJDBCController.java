@@ -22,8 +22,8 @@ import io.swagger.annotations.Api;
 * @date 2019年8月5日
  */
 @Api(tags = "Neo4j访问方式: 通过REST的独立服务器")
-@Controller("neo4jServerController")
-@RequestMapping("/neoServer")
+@Controller("neo4jServerJDBCController")
+@RequestMapping("/neoServerJDBC")
 @Scope("prototype")
 public class Neo4jJDBCController {
 	
