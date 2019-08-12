@@ -196,13 +196,48 @@ public class Neo4jServerController {
     	
     }
     
+    @RequestMapping(value = "deleteRelByName", method=RequestMethod.DELETE)
+    public void deleteRelationshiopByRelationshipName() {
+    	String cql = "Match p=()-[r:属于蜀国的人]-() Delete r";
+    	try{	
+	        Session session = driver.session();
+	        StatementResult result = session.run(cql);
+	        while (result.hasNext()) {
+	            Record record = result.next();
+	            System.out.println(record.fields().get(0).value().toString());
+	        }
+	        session.close();
+	        driver.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+    }
+    
+    
+    @RequestMapping(value = "findRelByName", method=RequestMethod.DELETE)
+    public void findRelationshiopByRelationshipName() {
+    	String cql = "MATCH p=()-[r:蜀国人物]->() RETURN p";
+    	try{	
+	        Session session = driver.session();
+	        StatementResult result = session.run(cql);
+	        while (result.hasNext()) {
+	            Record record = result.next();
+	            System.out.println(record.fields().get(0).value().toString());
+	        }
+	        session.close();
+	        driver.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+    }
+    
     @RequestMapping(value = "/tempTest", method=RequestMethod.POST)
 	public void tempTest(@RequestParam("name") String name) {
     	String cql = "create  (civilAviation0:civilAviation{departureTime:\"10:50:00\",estimatedTime:\"13:35:00\",name:\"3U8212\"}) , (civilAviation1:civilAviation{departureTime:\"06:40:00\",estimatedTime:\"09:00:00\",name:\"CZ3137\"}) , (civilAviation2:civilAviation{departureTime:\"15:55:00\",estimatedTime:\"19:20:00\",name:\"HU7819\"}) , (UserFlight0:UserFlight{name:\"韩妍\",id_card:\"610302198803057972\",flightNumber:\"CZ3137\"}) , (UserFlight1:UserFlight{name:\"华二丫\",id_card:\"610117199012127904\",flightNumber:\"CZ3137\"}) , (UserFlight2:UserFlight{name:\"孔小蝶\",id_card:\"610112199408094028\",flightNumber:\"CZ3137\"}) ,  (UserFlight16:UserFlight{name:\"朱静\",id_card:\"610113197207127749\",flightNumber:\"HU7819\"}) , (UserFlight17:UserFlight{name:\"魏可\",id_card:\"610113197207127431\",flightNumber:\"KY8253\"}) , (UserFlight18:UserFlight{name:\"陈美丽\",id_card:\"610115198501010373\",flightNumber:\"CZ3137\"}) , (UserFlight19:UserFlight{name:\"吴大秀\",id_card:\"610101198301018261\",flightNumber:\"CZ3137\"}) , (UserFlight20:UserFlight{name:\"华沛文\",id_card:\"610115198501012700\",flightNumber:\"3U8212\"}) , (UserFlight25:UserFlight{name:\"许元珊\",id_card:\"610302198803058434\",flightNumber:\"3U8212\"}) , (UserFlight29:UserFlight{name:\"孔敏\",id_card:\"610113197207128405\",flightNumber:\"SC9883\"})   WITH true as pass MATCH (s:civilAviation),(e:UserFlight) WHERE s.name = e.flightNumber CREATE (s)-[r:乘客的航班关系]->(e) RETURN r ";
     	Driver driver = GraphDatabase.driver( "bolt://localhost:7687", AuthTokens.basic( "neo4j", "root" ) );
-		try{			
-	        Session session = driver.session();
-	        StatementResult result = session.run(cql);
+    	Session session = driver.session();
+    	try{			
+    		StatementResult result = session.run(cql);
 	        
 	        List<Record> records = result.list();
 	        for (int i = 0; i < records.size(); i++) {
@@ -212,7 +247,7 @@ public class Neo4jServerController {
 	        	System.out.println(map.toString());
 
 	        }
-	        
+	        /*    
 	        ResultSummary summary = result.summary();
 	        
 	        StatementResult result2 = session.run("MATCH p=()-[r:`乘客的航班关系`]->() RETURN p LIMIT 25");
@@ -225,9 +260,16 @@ public class Neo4jServerController {
 
 	        }
 	        
-	        ResultSummary summary1 = result.summary();
+	        ResultSummary summary1 = result.summary();*/
 	        
-	        
+	        StatementResult result3 = session.run("call db.relationshiptypes");
+	        List<Record> records2 = result3.list();
+	        for (int i = 0; i < records2.size(); i++) {
+	        	Record record = records2.get(i);
+	        	System.out.println(record.toString());
+	        	Map<String, Object> map = record.asMap();
+	        	System.out.println(map.toString());
+	        }
 	        
 	        
 	        session.close();

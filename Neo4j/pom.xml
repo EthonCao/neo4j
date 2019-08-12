@@ -46,6 +46,12 @@
          	<artifactId>neo4j-java-driver</artifactId> 
          	<version>1.5.0</version> 
          </dependency> 
+         <!-- Neo4J JDBC -->
+         <dependency>
+		   <groupId>org.neo4j</groupId>
+		   <artifactId>neo4j-jdbc-driver</artifactId>
+		   <version>3.1.0</version>
+		</dependency>
          <!-- 嵌入式开发需要的jar包 --> 
     	<dependency>
    		 	<groupId>org.neo4j</groupId>
