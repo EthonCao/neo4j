@@ -3,17 +3,12 @@ package com.cao.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.neo4j.cypher.internal.frontend.v3_3.parser.Graphs;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

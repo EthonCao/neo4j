@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.lucene.util.MapOfSets;
 import org.neo4j.graphdb.*;
 
 import com.alibaba.fastjson.JSONObject;
@@ -20,7 +19,6 @@ import com.cao.types.NodeLabels;
 import com.cao.types.Relationships;
 
 import io.swagger.annotations.Api;
-import net.bytebuddy.dynamic.scaffold.MethodRegistry.Handler.ForAbstractMethod;
 
 /**
 * <p>Title: Neo4jController</p>  

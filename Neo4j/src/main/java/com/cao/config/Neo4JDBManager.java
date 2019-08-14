@@ -11,8 +11,6 @@ import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.cao.service.DBManager;
-
 @Configuration
 public class Neo4JDBManager {
 
@@ -37,7 +35,7 @@ public class Neo4JDBManager {
 	@Bean
 	public GraphDatabaseService getDB() {
         if (graphDatabaseDB == null) {
-            synchronized (DBManager.class) {
+            synchronized (Neo4JDBManager.class) {
                 graphDatabaseDB = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new File(neo4jDataBasePath))
                 		.setConfig(GraphDatabaseSettings.pagecache_memory, "512M")
                 		.setConfig(GraphDatabaseSettings.string_block_size, "60")
